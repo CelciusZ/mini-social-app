@@ -6,21 +6,18 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// MongoDB bağlantısı (Atlas connection string)
 mongoose.connect('mongodb+srv://kanka:sifre123@mini-social.8bzmg.mongodb.net/mini-social?retryWrites=true&w=majority&appName=mini-social', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => console.log('MongoDB bağlandı'))
   .catch(err => console.error('MongoDB hata:', err));
 
-// Post Modeli
 const postSchema = new mongoose.Schema({
   title: String,
   content: String,
 });
 const Post = mongoose.model('Post', postSchema);
 
-// Gönderileri getir
 app.get('/posts', async (req, res) => {
   try {
     const posts = await Post.find();
@@ -30,7 +27,6 @@ app.get('/posts', async (req, res) => {
   }
 });
 
-// Yeni gönderi ekle
 app.post('/posts', async (req, res) => {
   try {
     const newPost = new Post({
@@ -39,6 +35,16 @@ app.post('/posts', async (req, res) => {
     });
     await newPost.save();
     res.json(newPost);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/posts/:id', async (req, res) => {
+  try {
+    const post = await Post.findByIdAndDelete(req.params.id);
+    if (!post) throw new Error('Gönderi bulunamadı');
+    res.json({ message: 'Gönderi silindi' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
