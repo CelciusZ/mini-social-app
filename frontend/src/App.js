@@ -18,6 +18,10 @@ function Home({ posts, setPosts, error, setError }) {
     }
   };
 
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
