@@ -17,6 +17,4 @@ jobs:
     - name: Install Frontend Dependencies
       run: cd frontend && npm install
     - name: Deploy to Vercel
-      run: cd frontend && npx vercel --prod --yes  # --yes eklendi
-      env:
-        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      run: cd frontend && npx vercel deploy --prod --yes --token ${{ secrets.VERCEL_TOKEN }}
