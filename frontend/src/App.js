@@ -43,6 +43,7 @@ function App() {
   return (
     <div className="App">
       <h1>Mini Sosyal Medya</h1>
+      <p>Hoş geldin kanka, gönderi ekle!</p> {/* Yeni mesaj */}
       {error && <p>Hata: {error}</p>}
       <form onSubmit={handleSubmit}>
         <input
