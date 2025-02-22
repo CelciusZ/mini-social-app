@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import './App.css';
 
-function Home({ posts, setPosts, error, setError }) {
+function App() {
+  const [posts, setPosts] = useState([]);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const navigate = useNavigate();
+  const [error, setError] = useState(null);
 
-  const fetchPosts = async () => {
-    try {
-      const response = await fetch('https://mini-social-backend.onrender.com/posts');
-      if (!response.ok) throw new Error('Backend’den cevap alınamadı');
-      const data = await response.json();
-      setPosts(data);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
+  // Gönderileri çek
   useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch('https://mini-social-backend.onrender.com/posts');
+        if (!response.ok) throw new Error('Backend’den veri alınamadı');
+        const data = await response.json();
+        setPosts(data);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
     fetchPosts();
   }, []);
 
+  // Gönderi ekle
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -40,6 +41,7 @@ function Home({ posts, setPosts, error, setError }) {
     }
   };
 
+  // Gönderi sil
   const handleDelete = async (id) => {
     try {
       const response = await fetch(`https://mini-social-backend.onrender.com/posts/${id}`, {
@@ -53,70 +55,43 @@ function Home({ posts, setPosts, error, setError }) {
   };
 
   return (
-    <div className="App">
-      <h1>Mini Sosyal Medya</h1>
-      {error && <p>Hata: {error}</p>}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Başlık"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <textarea
-          placeholder="İçerik"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
-        <button type="submit">Gönderi Ekle</button>
-      </form>
-      <ul>
-        {posts.map(post => (
-          <li key={post._id}>
-            <h2>{post.title}</h2>
-            <p>{post.content}</p>
-            <button onClick={() => handleDelete(post._id)}>Sil</button>
-          </li>
-        ))}
-      </ul>
-      <Link to="/about">Hakkında</Link>
+    <div className="container">
+      <header>
+        <h1>Mini Sosyal</h1>
+      </header>
+      <main>
+        {error && <p className="error">{error}</p>}
+        <form onSubmit={handleSubmit} className="post-form">
+          <input
+            type="text"
+            placeholder="Başlık yaz..."
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="input"
+          />
+          <textarea
+            placeholder="Ne düşünüyorsun kanka?"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            className="textarea"
+          />
+          <button type="submit" className="button">Paylaş</button>
+        </form>
+        <div className="posts">
+          {posts.length === 0 ? (
+            <p className="no-posts">Henüz gönderi yok, bir tane ekle!</p>
+          ) : (
+            posts.map(post => (
+              <div key={post._id} className="post">
+                <h2>{post.title}</h2>
+                <p>{post.content}</p>
+                <button onClick={() => handleDelete(post._id)} className="delete-button">Sil</button>
+              </div>
+            ))
+          )}
+        </div>
+      </main>
     </div>
-  );
-}
-
-function About() {
-  return (
-    <div className="App">
-      <h1>Hakkında</h1>
-      <p>Bu Mini Sosyal Medya uygulaması kanka için yapıldı!</p>
-      <Link to="/">Ana Sayfaya Dön</Link>
-    </div>
-  );
-}
-
-function App() {
-  const [posts, setPosts] = useState([]);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await fetch('https://mini-social-backend.onrender.com/posts');
-        if (!response.ok) throw new Error('Backend’den cevap alınamadı');
-        const data = await response.json();
-        setPosts(data);
-      } catch (err) {
-        setError(err.message);
-      }
-    };
-    fetchPosts();
-  }, []);
-
-  return (
-    <Routes>
-      <Route path="/" element={<Home posts={posts} setPosts={setPosts} error={error} setError={setError} />} />
-      <Route path="/about" element={<About />} />
-    </Routes>
   );
 }
 
