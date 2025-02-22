@@ -6,7 +6,7 @@ function App() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:5000/posts')
+    fetch('https://mini-social-backend.onrender.com/posts') // Render URL’si
       .then(response => {
         if (!response.ok) {
           throw new Error('Backend’den cevap alınamadı: ' + response.status);
@@ -43,7 +43,5 @@ function App() {
     </div>
   );
 }
-
-
 
 export default App;
