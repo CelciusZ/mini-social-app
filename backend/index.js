@@ -8,18 +8,19 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect('mongodb+srv://kanka:sifre123@mini-social.8bzmg.mongodb.net/mini-social?retryWrites=true&w=majority&appName=mini-social', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => console.log('MongoDB bağlandı'))
+// MongoDB Bağlantısı
+mongoose.connect('mongodb+srv://kanka:sifre123@mini-social.8bzmg.mongodb.net/mini-social?retryWrites=true&w=majority&appName=mini-social')
+  .then(() => console.log('MongoDB bağlandı'))
   .catch(err => console.error('MongoDB hata:', err));
 
+// Kullanıcı Modeli
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
 });
 const User = mongoose.model('User', userSchema);
 
+// Gönderi Modeli
 const postSchema = new mongoose.Schema({
   title: String,
   content: String,
@@ -27,6 +28,7 @@ const postSchema = new mongoose.Schema({
 });
 const Post = mongoose.model('Post', postSchema);
 
+// Kayıt Endpoint
 app.post('/register', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -42,6 +44,7 @@ app.post('/register', async (req, res) => {
   }
 });
 
+// Login Endpoint
 app.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -57,6 +60,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
+// Gönderileri Getir
 app.get('/posts', async (req, res) => {
   try {
     const posts = await Post.find().populate('userId', 'username');
@@ -66,6 +70,7 @@ app.get('/posts', async (req, res) => {
   }
 });
 
+// Gönderi Ekle
 app.post('/posts', async (req, res) => {
   try {
     const token = req.headers.authorization?.split(' ')[1];
@@ -83,6 +88,7 @@ app.post('/posts', async (req, res) => {
   }
 });
 
+// Gönderi Sil
 app.delete('/posts/:id', async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
