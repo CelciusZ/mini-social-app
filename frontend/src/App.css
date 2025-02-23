@@ -73,6 +73,15 @@ h1 {
   background-color: #135ab6;
 }
 
+.logout {
+  background-color: #d32f2f;
+  margin-top: 20px;
+}
+
+.logout:hover {
+  background-color: #b71c1c;
+}
+
 .posts {
   display: flex;
   flex-direction: column;

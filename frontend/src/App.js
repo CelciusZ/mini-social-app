@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import './App.css';
 
@@ -16,7 +16,8 @@ function Register() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       });
-      if (!response.ok) throw new Error('Kayıt başarısız');
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Kayıt başarısız');
       navigate('/login');
     } catch (err) {
       setError(err.message);
@@ -63,9 +64,9 @@ function Login() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       });
-      if (!response.ok) throw new Error('Giriş başarısız');
-      const { token } = await response.json();
-      localStorage.setItem('token', token);
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Giriş başarısız');
+      localStorage.setItem('token', data.token);
       navigate('/');
     } catch (err) {
       setError(err.message);
@@ -109,7 +110,7 @@ function Home() {
     const fetchPosts = async () => {
       try {
         const response = await fetch('https://mini-social-backend.onrender.com/posts');
-        if (!response.ok) throw new Error('Backend’den veri alınamadı');
+        if (!response.ok) throw new Error('Gönderiler alınamadı');
         const data = await response.json();
         setPosts(data);
       } catch (err) {
@@ -130,9 +131,9 @@ function Home() {
         },
         body: JSON.stringify({ title, content }),
       });
-      if (!response.ok) throw new Error('Gönderi eklenemedi');
-      const newPost = await response.json();
-      setPosts([...posts, newPost]);
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Gönderi eklenemedi');
+      setPosts([...posts, data]);
       setTitle('');
       setContent('');
     } catch (err) {
@@ -157,7 +158,7 @@ function Home() {
       <h1>Mini Sosyal</h1>
       {error && <p className="error">{error}</p>}
       {token ? (
-        <>
+        <div>
           <form onSubmit={handleSubmit} className="post-form">
             <input
               type="text"
@@ -187,7 +188,8 @@ function Home() {
               ))
             )}
           </div>
-        </>
+          <button onClick={() => { localStorage.removeItem('token'); window.location.href = '/login'; }} className="button logout">Çıkış Yap</button>
+        </div>
       ) : (
         <p>Lütfen <Link to="/login">giriş yap</Link> veya <Link to="/register">kayıt ol</Link>.</p>
       )}
