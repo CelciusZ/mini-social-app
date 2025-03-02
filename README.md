@@ -1,6 +1,6 @@
 # Mini Social App
 
-Mini Social App, kullanıcıların kayıt olup giriş yapabileceği, gönderi ekleyip silebileceği basit bir sosyal medya uygulamasıdır. Fullstack bir proje olarak geliştirilmiştir ve React ile Express kullanılarak inşa edilmiştir.
+Mini Social App, kullanıcıların kayıt olup giriş yapabileceği, gönderi ekleyip silebileceği basit bir sosyal medya uygulamasıdır. Fullstack bir proje olarak geliştirilmiştir ve React ile Express kullanılarak inşa edilmiştir. 
 
 ## Özellikler
 - Kullanıcı kayıt ve giriş (authentication)
@@ -22,5 +22,6 @@ Mini Social App, kullanıcıların kayıt olup giriş yapabileceği, gönderi ek
 - Git
 - MongoDB Atlas hesabı
 
-#Proje Adresi
+Deploy edilmiş proje linki:
 https://frontend-three-sigma-40.vercel.app/
+
