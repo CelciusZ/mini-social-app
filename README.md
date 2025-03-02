@@ -22,5 +22,5 @@ Mini Social App, kullanıcıların kayıt olup giriş yapabileceği, gönderi ek
 - Git
 - MongoDB Atlas hesabı
 
-###Proje Adresi
-##https://frontend-three-sigma-40.vercel.app/
+#Proje Adresi
+https://frontend-three-sigma-40.vercel.app/
